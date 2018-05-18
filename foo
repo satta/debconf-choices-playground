@@ -2,15 +2,13 @@
 DEBIAN_FRONTEND=noninteractive
 . /usr/share/debconf/confmodule
 
-kernels="1, 2, 3, 4"
-kernel=5
+vals=`ip link show | egrep '^[^  ]' | cut -d: -f2 | cut -c2- | tr "\\n" " " | sed 's/ /, /g'  | sed 's/, $//'`
+echo "Select options: $vals"
 
-echo "Select options: $kernels"
+db_subst question/select vals "$vals"
 
-db_subst question/select kernels "$kernels"
-
-db_set question/select "$kernel"
-echo "Select value set to: $kernel"
+db_set question/select "$val"
+echo "Select value set to: $val"
 
 db_get question/select
 echo "Select value: $RET"
