@@ -1,0 +1,22 @@
+#! /bin/sh -e
+DEBIAN_FRONTEND=noninteractive
+. /usr/share/debconf/confmodule
+
+kernels="1, 2, 3, 4"
+kernel=5
+
+echo "Select options: $kernels"
+
+db_subst question/select kernels "$kernels"
+
+db_set question/select "$kernel"
+echo "Select value set to: $kernel"
+
+db_get question/select
+echo "Select value: $RET"
+
+db_input critical question/select || [ $? -eq 30 ]
+db_go
+
+db_get question/select
+echo "Select value after input: $RET"
